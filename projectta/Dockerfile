@@ -25,6 +25,7 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     libicu-dev \
     libpq-dev \
+    libsqlite3-dev \
     libzip-dev \
     unzip \
   && docker-php-ext-install intl opcache pdo_pgsql pdo_sqlite zip \
