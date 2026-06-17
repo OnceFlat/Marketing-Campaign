@@ -90,7 +90,7 @@ services:
     restart: unless-stopped
 
   db:
-    image: postgres:18-alpine
+    image: postgres:17-alpine
     environment:
       POSTGRES_DB: ${DB_DATABASE:-projectta}
       POSTGRES_USER: ${DB_USERNAME:-projectta}
