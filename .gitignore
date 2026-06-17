@@ -1,0 +1,48 @@
+# OS/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.zed/
+.cursor/
+.qodo/
+
+# Environment/secrets
+.env
+.env.*
+!.env.example
+auth.json
+*.pem
+
+# Logs/cache
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.phpunit.result.cache
+.phpunit.cache/
+*.tsbuildinfo
+
+# Frontend
+frontendta/node_modules/
+frontendta/.next/
+frontendta/out/
+frontendta/build/
+frontendta/coverage/
+frontendta/test-results/
+frontendta/.vercel/
+frontendta/next-env.d.ts
+frontendta/.git-backup-before-monorepo/
+
+# Backend
+projectta/node_modules/
+projectta/vendor/
+projectta/public/build/
+projectta/public/hot/
+projectta/public/storage/
+projectta/storage/*.key
+projectta/storage/pail/
+projectta/.codex/
+
+# Docker/local runtime
+infrastructure/.env
