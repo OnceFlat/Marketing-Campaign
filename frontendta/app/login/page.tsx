@@ -10,7 +10,6 @@ import {
   EyeOff,
   LockKeyhole,
   Mail,
-  ShieldCheck,
   Sparkles,
 } from "lucide-react";
 import { ApiConnectionError, ApiError, API_URL, api } from "@/lib/api";
@@ -200,14 +199,6 @@ export default function LoginPage() {
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </form>
-
-            <div className="mt-6 flex items-start gap-3 rounded-3xl border border-[#dfe6db] bg-[#f8f4ea] p-4 text-xs leading-5 text-[#607064]">
-              <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#0b6b4c]" />
-              <p>
-                Tips cek cepat: pastikan server Laravel berjalan di API URL di atas, lalu coba
-                akun seed `admin@campaign.test` atau `marketing@campaign.test`.
-              </p>
-            </div>
           </div>
         </div>
       </section>
