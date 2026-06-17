@@ -1,0 +1,109 @@
+services:
+  nginx:
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    depends_on:
+      - frontend
+      - backend
+    expose:
+      - "80"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ../frontendta
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api}
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api}
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ../projectta
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_NAME: ${APP_NAME:-ProjectTA}
+      APP_ENV: production
+      APP_KEY: ${APP_KEY}
+      APP_DEBUG: "false"
+      APP_URL: ${APP_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
+      LOG_CHANNEL: stderr
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE:-projectta}
+      DB_USERNAME: ${DB_USERNAME:-projectta}
+      DB_PASSWORD: ${DB_PASSWORD}
+      SESSION_DRIVER: database
+      CACHE_STORE: database
+      QUEUE_CONNECTION: database
+      MAIL_MAILER: ${MAIL_MAILER:-log}
+      META_GRAPH_VERSION: ${META_GRAPH_VERSION:-v25.0}
+      META_ACCESS_TOKEN: ${META_ACCESS_TOKEN:-}
+      META_INSTAGRAM_BUSINESS_ID: ${META_INSTAGRAM_BUSINESS_ID:-}
+      RUN_MIGRATIONS: ${RUN_MIGRATIONS:-true}
+    volumes:
+      - backend_storage:/var/www/html/storage/app
+    restart: unless-stopped
+
+  queue:
+    build:
+      context: ../projectta
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["php", "artisan", "queue:work", "--tries=3", "--timeout=90"]
+    environment:
+      APP_NAME: ${APP_NAME:-ProjectTA}
+      APP_ENV: production
+      APP_KEY: ${APP_KEY}
+      APP_DEBUG: "false"
+      APP_URL: ${APP_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
+      LOG_CHANNEL: stderr
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE:-projectta}
+      DB_USERNAME: ${DB_USERNAME:-projectta}
+      DB_PASSWORD: ${DB_PASSWORD}
+      SESSION_DRIVER: database
+      CACHE_STORE: database
+      QUEUE_CONNECTION: database
+      MAIL_MAILER: ${MAIL_MAILER:-log}
+      META_GRAPH_VERSION: ${META_GRAPH_VERSION:-v25.0}
+      META_ACCESS_TOKEN: ${META_ACCESS_TOKEN:-}
+      META_INSTAGRAM_BUSINESS_ID: ${META_INSTAGRAM_BUSINESS_ID:-}
+      RUN_MIGRATIONS: "false"
+    volumes:
+      - backend_storage:/var/www/html/storage/app
+    restart: unless-stopped
+
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-projectta}
+      POSTGRES_USER: ${DB_USERNAME:-projectta}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-projectta} -d ${DB_DATABASE:-projectta}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  backend_storage:
+  postgres_data:
