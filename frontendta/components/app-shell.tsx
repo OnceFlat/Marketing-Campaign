@@ -144,12 +144,43 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      <div className="lg:pl-[230px]">
-        <header className="sticky top-0 z-20 flex min-h-16 items-center gap-3 border-b border-zinc-200 bg-white/95 px-4 backdrop-blur lg:hidden">
-          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-emerald-600 text-sm font-semibold text-white">
-            MC
+      <div className="pb-20 lg:pb-0 lg:pl-[230px]">
+        <header className="sticky top-0 z-20 border-b border-zinc-200 bg-white/95 backdrop-blur lg:hidden">
+          <div className="flex min-h-16 items-center gap-3 px-4">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-emerald-600 text-sm font-semibold text-white">
+              MC
+            </div>
+            <div className="min-w-0">
+              <div className="truncate text-sm font-semibold">Marketing Campaign</div>
+              <div className="truncate text-xs text-zinc-500">{session?.user.name}</div>
+            </div>
           </div>
-          <div className="text-sm font-semibold">Marketing Campaign</div>
+          <nav className="flex gap-2 overflow-x-auto px-4 pb-3 [scrollbar-width:none]">
+            {primaryNav.filter((item) => {
+              if (!item.roles) return true;
+
+              return item.roles.some((role) => session?.roles.includes(role));
+            }).map((item) => {
+              const Icon = item.icon;
+              const active = pathname === item.href;
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "inline-flex h-9 shrink-0 items-center gap-2 rounded-md border px-3 text-xs font-medium transition",
+                    active
+                      ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                      : "border-zinc-200 bg-white text-zinc-600",
+                  )}
+                >
+                  <Icon className="h-4 w-4" />
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
         </header>
         {children}
       </div>
@@ -169,14 +200,14 @@ export function PageChrome({
   children: React.ReactNode;
 }) {
   return (
-    <main className="mx-auto w-full max-w-7xl px-5 py-8 lg:px-7">
-      <div className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-        <div>
+    <main className="mx-auto w-full max-w-7xl px-4 py-5 sm:px-5 lg:px-7 lg:py-8">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between lg:mb-8">
+        <div className="min-w-0">
           <p className="text-sm text-zinc-500">
             Dasbor <span className="px-1 text-zinc-300">/</span>{" "}
             <span className="font-medium text-zinc-900">{trail}</span>
           </p>
-          <h1 className="mt-9 text-2xl font-bold tracking-normal text-zinc-950">
+          <h1 className="mt-4 text-2xl font-bold tracking-normal text-zinc-950 lg:mt-9">
             {title}
           </h1>
         </div>

@@ -17,7 +17,7 @@ export function DataTable({
       )}
     >
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[1080px] text-sm">
+        <table className="w-full min-w-[920px] text-sm">
           <thead>
             <tr className="border-b border-zinc-200 text-left text-xs font-semibold text-zinc-500">
               {columns.map((column) => (

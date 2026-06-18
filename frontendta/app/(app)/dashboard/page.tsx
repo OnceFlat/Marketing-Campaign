@@ -79,7 +79,7 @@ export default function DashboardPage() {
       <section className="mt-6 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
         <Card>
           <CardContent className="p-5">
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <h2 className="text-base font-semibold">Campaign Terbaru</h2>
               <Badge>{dashboard.recent_campaigns.length} data</Badge>
             </div>
@@ -134,11 +134,11 @@ function ViewsLineChartCard({ data }: { data: { label: string; total: number }[]
   return (
     <Card>
       <CardContent className="p-5">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-base font-semibold">Tren Views</h2>
           <Badge>{data.length} periode</Badge>
         </div>
-        <div className="h-72 overflow-hidden rounded-md border border-zinc-100 bg-zinc-50 p-4">
+        <div className="h-60 overflow-hidden rounded-md border border-zinc-100 bg-zinc-50 p-3 sm:h-72 sm:p-4">
           <svg viewBox="0 0 600 220" className="h-full w-full" role="img" aria-label="Line chart tren views">
             <line x1="40" y1="180" x2="560" y2="180" stroke="#d4d4d8" />
             <line x1="40" y1="30" x2="40" y2="180" stroke="#d4d4d8" />
@@ -229,7 +229,7 @@ function PieChartCard({ data }: { data: Record<string, number> }) {
       <CardContent className="p-5">
         <h2 className="mb-4 text-base font-semibold">Status Campaign</h2>
         <div className="flex flex-col items-center gap-5 sm:flex-row xl:flex-col">
-          <svg viewBox="0 0 120 120" className="h-44 w-44 -rotate-90" role="img" aria-label="Pie chart status campaign">
+          <svg viewBox="0 0 120 120" className="h-36 w-36 -rotate-90 sm:h-44 sm:w-44" role="img" aria-label="Pie chart status campaign">
             <circle cx="60" cy="60" r="38" fill="none" stroke="#f4f4f5" strokeWidth="22" />
             {entries.map(([status, value], index) => {
               const dash = total ? (value / total) * 238.76 : 0;
@@ -294,9 +294,9 @@ function Metric({
   return (
     <Card>
       <CardContent className="flex items-center justify-between p-5">
-        <div>
+        <div className="min-w-0">
           <p className="text-sm text-zinc-500">{label}</p>
-          <p className="mt-2 text-3xl font-bold">{compactNumber(value)}</p>
+          <p className="mt-2 text-2xl font-bold sm:text-3xl">{compactNumber(value)}</p>
         </div>
         <div className="flex h-11 w-11 items-center justify-center rounded-md bg-emerald-50 text-emerald-700">
           <Icon className="h-5 w-5" />

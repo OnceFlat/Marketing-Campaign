@@ -310,13 +310,13 @@ export default function CampaignPage() {
       title="Campaign"
       trail="Campaign"
       action={
-        <div className="flex flex-wrap items-center gap-2">
-          <Button type="button" variant="outline" onClick={refreshData} disabled={refreshing}>
+        <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap sm:items-center">
+          <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={refreshData} disabled={refreshing}>
             <RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
             {refreshing ? "Memuat..." : "Refresh"}
           </Button>
           {campaigns.length ? (
-            <Button type="button" variant="outline" onClick={toggleAllVisibleCampaigns}>
+            <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={toggleAllVisibleCampaigns}>
               {allVisibleSelected ? "Batal Pilih" : "Pilih Semua"}
             </Button>
           ) : null}
@@ -331,7 +331,7 @@ export default function CampaignPage() {
               {bulkDeleting ? "Menghapus..." : `Hapus ${selectedCampaignIds.length}`}
             </Button>
           ) : null}
-          <Button onClick={startAdd}>
+          <Button className="col-span-2 w-full sm:col-span-1 sm:w-auto" onClick={startAdd}>
             <Plus className="h-4 w-4" />
             Tambah Campaign
           </Button>
@@ -411,7 +411,7 @@ export default function CampaignPage() {
           <Field label="Tujuan">
             <Textarea value={form.objective} onChange={(e) => setForm({ ...form, objective: e.target.value })} />
           </Field>
-          <div className="flex justify-end gap-2">
+          <div className="grid gap-2 sm:flex sm:justify-end">
             <Button type="button" variant="outline" onClick={cancelForm}>Batal</Button>
             <Button type="submit">{editingId ? "Simpan Perubahan" : "Simpan"}</Button>
           </div>
@@ -419,7 +419,7 @@ export default function CampaignPage() {
         </div>
       </div>
 
-      <section className="mb-6 rounded-lg border border-emerald-100 bg-emerald-50/70 p-5">
+      <section className="mb-6 rounded-lg border border-emerald-100 bg-emerald-50/70 p-4 sm:p-5">
         <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="flex items-center gap-2 text-emerald-800">
@@ -487,7 +487,94 @@ export default function CampaignPage() {
         </div>
       ) : null}
 
-      <DataTable columns={["Pilih", "Nama", "Channel", "Anggaran", "Periode", "View", "Like", "Comment", "Share", "Status", "Aksi"]}>
+      <section className="grid gap-3 lg:hidden">
+        {campaigns.length ? (
+          campaigns.map((campaign) => (
+            <article key={campaign.id} className="rounded-lg border border-zinc-200 bg-white p-4 shadow-sm">
+              <div className="flex items-start gap-3">
+                <input
+                  aria-label={`Pilih ${campaign.name}`}
+                  checked={selectedCampaignIds.includes(campaign.id)}
+                  className="mt-1 h-4 w-4 rounded border-zinc-300 text-emerald-600 focus:ring-emerald-500"
+                  type="checkbox"
+                  onChange={() => toggleSelectedCampaign(campaign.id)}
+                />
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <h2 className="break-words text-base font-semibold text-zinc-950">{campaign.name}</h2>
+                      <p className="mt-1 text-sm font-medium text-zinc-600">{campaign.channel}</p>
+                    </div>
+                    <Badge className={statusClass[campaign.status]}>
+                      {statusLabels[campaign.status] ?? campaign.status}
+                    </Badge>
+                  </div>
+
+                  {campaign.instagram_permalink ? (
+                    <a
+                      className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-emerald-700 hover:text-emerald-800"
+                      href={campaign.instagram_permalink}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      Buka Post
+                      <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  ) : null}
+
+                  <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
+                    <MetricText label="Anggaran" value={money(campaign.budget)} />
+                    <MetricText label="Periode" value={`${shortDate(campaign.start_date)} - ${shortDate(campaign.end_date)}`} />
+                    <MetricText label="View" value={compactNumber(campaign.views ?? 0)} />
+                    <MetricText label="Like" value={compactNumber(campaign.likes ?? 0)} />
+                    <MetricText label="Comment" value={compactNumber(campaign.comments ?? 0)} />
+                    <MetricText label="Share" value={compactNumber(campaign.shares ?? 0)} />
+                  </div>
+
+                  <div className="mt-4 grid grid-cols-3 gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => editCampaign(campaign)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className={
+                        campaign.status === "cancelled"
+                          ? "hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700"
+                          : "hover:border-amber-200 hover:bg-amber-50 hover:text-amber-700"
+                      }
+                      onClick={() => setCampaignToToggle(campaign)}
+                    >
+                      {campaign.status === "cancelled" ? "Aktifkan" : "Batalkan"}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="hover:border-rose-200 hover:bg-rose-50 hover:text-rose-700"
+                      onClick={() => setCampaignToDelete(campaign)}
+                    >
+                      Hapus
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </article>
+          ))
+        ) : (
+          <div className="rounded-lg border border-zinc-200 bg-white px-4 py-10 text-center text-sm text-zinc-500">
+            Belum ada campaign.
+          </div>
+        )}
+      </section>
+
+      <DataTable className="hidden lg:block" columns={["Pilih", "Nama", "Channel", "Anggaran", "Periode", "View", "Like", "Comment", "Share", "Status", "Aksi"]}>
         {campaigns.length ? (
           campaigns.map((campaign) => (
             <tr key={campaign.id}>
@@ -589,7 +676,7 @@ export default function CampaignPage() {
                 </p>
               </div>
             </div>
-            <div className="mt-6 flex justify-end gap-2">
+            <div className="mt-6 grid gap-2 sm:flex sm:justify-end">
               <Button type="button" variant="outline" onClick={() => setCampaignToToggle(null)}>
                 Batal
               </Button>
@@ -624,7 +711,7 @@ export default function CampaignPage() {
                 </p>
               </div>
             </div>
-            <div className="mt-6 flex justify-end gap-2">
+            <div className="mt-6 grid gap-2 sm:flex sm:justify-end">
               <Button type="button" variant="outline" onClick={() => setCampaignToDelete(null)}>
                 Batal
               </Button>
