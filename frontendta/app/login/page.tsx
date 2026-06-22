@@ -12,7 +12,7 @@ import {
   Mail,
   Sparkles,
 } from "lucide-react";
-import { ApiConnectionError, ApiError, API_URL, api } from "@/lib/api";
+import { ApiConnectionError, ApiError, api } from "@/lib/api";
 import { AuthSession, getSession, saveSession } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/form";
@@ -99,19 +99,6 @@ export default function LoginPage() {
           <h1 className="mt-7 max-w-2xl text-6xl font-black leading-[0.95] tracking-[-0.06em] text-[#123427]">
             Kelola campaign dengan lebih efektif.
           </h1>
-
-          <div className="mt-10 grid max-w-2xl grid-cols-3 gap-3">
-            {[
-              ["API", API_URL.replace(/^https?:\/\//, "")],
-              ["Role", "admin / marketing"],
-              ["Sesi", "browser fallback"],
-            ].map(([label, value]) => (
-              <div key={label} className="rounded-3xl border border-white/60 bg-white/55 p-4 shadow-sm backdrop-blur">
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#8b7449]">{label}</p>
-                <p className="mt-2 truncate text-sm font-semibold text-[#213229]">{value}</p>
-              </div>
-            ))}
-          </div>
         </div>
 
         <div className="mx-auto w-full max-w-md">
@@ -156,7 +143,7 @@ export default function LoginPage() {
                     type="email"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
-                    placeholder="admin@campaign.test"
+                    placeholder="Masukkan email"
                     disabled={loading}
                   />
                 </div>
